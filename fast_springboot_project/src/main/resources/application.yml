@@ -1,0 +1,16 @@
+#################
+#               #
+#    Spring     #
+#               #
+#################
+server.port: 8080
+spring: 
+   thymeleaf.cache: false
+   datasource.url: jdbc:sqlite:${user.dir}/db/data.db
+#################
+#               #
+# elasticsearch #
+#               #
+################# 
+#elasticsearch.rest.urls: http://localhost:9200,http://localhost:9200
+elasticsearch.rest.urls: http://10.16.238.103:9210,http://10.16.238.104:9210  

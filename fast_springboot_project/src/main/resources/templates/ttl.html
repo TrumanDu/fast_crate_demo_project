@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<title>TTL</title>
+<link rel="stylesheet"
+	th:href="@{/css/dataTables.bootstrap4.min.css}" />
+<link rel="stylesheet"
+	th:href="@{/css/bootstrap.min.css}"></link>
+<link th:href="@{/css/font-awesome.min.css}" />
+<style type="text/css">
+table {
+	table-layout: fixed;
+}
+
+td {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+a:link {
+	text-decoration: none;
+}
+
+a:visited {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+a:active {
+	text-decoration: none;
+}
+</style>
+</head>
+<body>
+	<nav class="navbar navbar-light bg-light">
+		<a class="navbar-brand" href="/"> <!-- <img
+			th:src="@{/images/logo.png}" width="300" height="50"
+			class="d-inline-block align-top" alt="" /> -->
+			<h1>HOME</h1>
+		</a>
+	</nav>
+
+
+	<div class="card">
+		<div class="card-header row" style="text-align: right">
+			<div class="col-sm-3">
+				<a class="navbar-brand" href="/ttl/list">
+					<img th:src="@{/images/ttl_logo.png}" width="300" height="50"
+					class="d-inline-block align-top" alt="" />
+				</a>
+			</div>
+			<div class="col-sm-5 ml-auto">
+				<button type="button" class="btn btn-primary"
+					onclick="requestAdd();">Add</button>
+			</div>
+		</div>
+		<div class="card-body">
+			<table class="table table-hover" id="example">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Index Name</th>
+						<th>Cron</th>
+						<th>Type(Time to live)</th>
+						<th>Config</th>
+						<th>Operation</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="t,tStat:${results}">
+						<th th:text="${tStat.index+1}" scope="row">1</th>
+						<td th:text="${t.name}">Index Name</td>
+						<td th:text="${t.cron}">Cron</td>
+						<td>
+							<div th:switch="${t.type}">
+								<p th:case="0">day</p>
+								<p th:case="1">custom query</p>
+							</div>
+						</td>
+
+						<td th:switch="${t.type}">
+							<p th:case="'0'" th:text="${t.maxDay}"></p>
+							<p th:case="1" th:text="${t.config}"></p>
+						</td>
+						<td> <a class="btn-sm btn-info" href="#"
+							th:onclick="'javascript:requestEdit(\''+${t.id}+'\')'">Edit</a>
+							&nbsp;&nbsp; <a class="btn-sm btn-danger" href="#"
+							th:onclick="'javascript:del(\''+${t.id}+'\')'">Del </a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLongTitle" aria-hidden="true"
+		data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">Add TTL</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form id="addForm">
+						<div class="form-group row">
+							<label class="col-sm-4 col-form-label" for="name">Index
+								Name:</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" id="name" name="name"
+									placeholder="shoppingcartapi-{YYYY-MM-dd}" />
+							</div>
+						</div>
+
+						<div class="form-group row" id="cronDiv">
+							<label class="col-sm-4 col-form-label" for="cron">Cron:</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" id="cron" name="cron"
+									placeholder="Cron patten;such as: 0:0:60" />
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label class="col-sm-4 col-form-label" for="type">TTL
+								Type:</label>
+							<div class="col-sm-8">
+								<select class="form-control" id="type" name="type"
+									onchange="view();">
+									<option value="0">Time to live by day</option>
+									<option value="1">Time to live by custom query</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group row" style="display: none">
+							<label class="col-sm-4 col-form-label" for="status">Status:</label>
+							<div class="col-sm-8">
+								<select class="form-control" id="status" name="status">
+									<option value="0">not run</option>
+									<option value="1">run</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group row" id="maxDayDiv">
+							<label class="col-sm-4 col-form-label" for="maxDay">Max
+								day:</label>
+							<div class="col-sm-8">
+								<input type="number" min="1" class="form-control" id="maxDay"
+									name="maxDay" placeholder="Max Day input" />
+							</div>
+						</div>
+
+						<div class="form-group row" style="display: none" id="configDiv">
+							<label class="col-sm-4 col-form-label" for="config">Delete
+								by query:</label>
+							<div class="col-sm-8">
+								<textarea rows="3" cols="" class="form-control" id="config"
+									name="config" placeholder="delete by query"></textarea>
+							</div>
+						</div>
+
+					</form>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" id="addButton"
+						onclick="add()">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script th:src="@{/js/jquery1.12.4.min.js}"></script>
+	<script
+		th:src="@{/js/jquery.dataTables1.10.15.min.js}"></script>
+	<script
+		th:src="@{/js/dataTables1.10.15.bootstrap4.min.js}"></script>
+	<script
+		th:src="@{/js/popper.min.js}"></script>
+	<script
+		th:src="@{/js/bootstrap4.0.0-beta.min.js}"></script>
+	<!-- bootbox -->
+	<script th:src="@{/js/bootbox.min.js}"></script>
+	<script type="text/javascript">
+$(document).ready(function() {
+    $('#example').DataTable({
+    	"paging":   true,
+        "ordering": true,
+        "info":     false
+    });
+} );
+
+function view(){
+	var type = $("#type").val();
+	if(type==0){
+		$("#maxDayDiv").show();
+		$("#configDiv").hide();
+		$("#config").val();
+	}else{
+		$("#configDiv").show();
+		$("#maxDayDiv").hide();
+		$("#maxDay").val(0);
+	}
+}
+
+function requestAdd(){
+	$('#addForm')[0].reset();
+	$("#addButton").attr('onclick','add()');
+	$('#cron').attr("readonly",false);
+	$("h5").html("Add TTL");
+	$('#exampleModal').modal('show');
+}
+
+function add() {
+    $.ajax({
+        url: '/ttl/add',
+        type: 'POST',
+        data: $("#addForm").serialize(),
+        datatype: 'json',
+        success: function (data, textStatus, jqXHR) {
+        	$('#exampleModal').modal('hide');
+            window.location.href = "/ttl/list";
+        },
+        error: function (xhr, textStatus) {
+            console.log(xhr)
+            console.log(textStatus)
+        },
+    });
+}
+
+function update(id) {
+	
+    $.ajax({
+        url: '/ttl/update?id='+id,
+        type: 'POST',
+        data: $("#addForm").serialize(),
+        datatype: 'json',
+        success: function (data, textStatus, jqXHR) {
+        	$('#exampleModal').modal('hide');
+            window.location.href = "/ttl/list";
+        },
+        error: function (xhr, textStatus) {
+            console.log(xhr)
+            console.log(textStatus)
+        },
+    });
+}
+
+
+function requestEdit(id) {
+	$('#addForm')[0].reset();
+    $.ajax({
+        url: '/ttl/update?id='+id,
+        type: 'get',
+        datatype: 'json',
+        success: function (data, textStatus, jqXHR) {
+        	console.log(data);
+        	var json = eval('('+data+')')
+        	$("#name").val(json.name);
+        	$("#type").val(json.type);
+        	$("#status").val(json.status);
+        	$("#cron").val(json.cron);
+        	$('#cron').attr("readonly",true);
+        	$("#config").val(json.config);
+        	$("#maxDay").val(json.maxDay);
+        	view();
+        	$("h5").html("Update");
+        	$("#addButton").attr('onclick','update('+id+')');
+        	$('#exampleModal').modal('show');
+        	
+        },
+        error: function (xhr, textStatus) {
+            console.log(xhr)
+            console.log(textStatus)
+        },
+    });
+}
+
+
+
+function del(id) {
+	bootbox
+	.confirm({
+		size : "small",
+		message : '<i class="fa fa-warning"></i> Are you sure delete ?',
+		callback : function(result) {
+			if (result) {
+				$.ajax({
+			        url: '/ttl/delete?id=' + id,
+			        type: 'get',
+			        datatype: 'json',
+			        success: function (data, textStatus, jqXHR) {
+			            console.log(data);
+			            window.location.href = "/ttl/list";
+			        },
+			        error: function (xhr, textStatus) {
+			            console.log(xhr)
+			            console.log(textStatus)
+			        },
+			    });
+			}
+		}
+	}); 
+}
+</script>
+
+</body>
+</html>

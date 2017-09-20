@@ -1,0 +1,48 @@
+<assembly>
+	<id>release</id>
+	<formats>
+		<format>tar.gz</format>
+	</formats>
+	<fileSets>
+		<fileSet>
+			<directory>${project.build.directory}/classes/docker</directory>
+			<outputDirectory></outputDirectory>
+			<includes>
+				<include>build.sh</include>
+				<include>Dockerfile</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>${basedir}/db</directory>
+			<outputDirectory>app/db</outputDirectory>
+			<includes>
+				<include>*.db</include>
+			</includes>
+		</fileSet>
+
+
+		<fileSet>
+			<directory>${project.build.directory}/classes</directory>
+			<outputDirectory>app/config</outputDirectory>
+			<includes>
+				<include>application.yml</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>${project.build.directory}</directory>
+			<outputDirectory>app</outputDirectory>
+			<includes>
+				<include>*.jar</include>
+			</includes>
+		</fileSet>
+
+		<fileSet>
+			<directory>${project.build.directory}/classes/docker</directory>
+			<outputDirectory>app</outputDirectory>
+			<includes>
+				<include>start.sh</include>
+			</includes>
+		</fileSet>
+
+	</fileSets>
+</assembly>
