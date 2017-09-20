@@ -1,0 +1,2 @@
+# fast_crate_demo_project
+快速创建项目模板工程集合
