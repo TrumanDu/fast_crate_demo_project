@@ -70,3 +70,81 @@
 ```
 - node.js
 1. thinkjs3.0+sqlite+nunjucks
+主要实现CURD功能，项目结构如下：
+```
+.
+├── app
+│   ├── bootstrap
+│   │   ├── master.js
+│   │   ├── master.js.map
+│   │   ├── worker.js
+│   │   └── worker.js.map
+│   ├── config
+│   │   ├── adapter.js
+│   │   ├── adapter.js.map
+│   │   ├── config.js
+│   │   ├── config.js.map
+│   │   ├── config.production.js
+│   │   ├── config.production.js.map
+│   │   ├── extend.js
+│   │   ├── extend.js.map
+│   │   ├── middleware.js
+│   │   ├── middleware.js.map
+│   │   ├── router.js
+│   │   └── router.js.map
+│   ├── controller
+│   │   ├── base.js
+│   │   ├── base.js.map
+│   │   ├── index.js
+│   │   ├── index.js.map
+│   │   └── test.js.map
+│   ├── logic
+│   │   ├── index.js
+│   │   └── index.js.map
+│   └── model
+│       ├── indexInfo.js.map
+│       ├── index.js
+│       ├── index.js.map
+│       └── NavData.js.map
+├── development.js
+├── docker
+├── LICENSE
+├── nginx.conf
+├── package.json
+├── pm2.json
+├── production.js
+├── README.md
+├── runtime
+│   ├── config
+│   │   └── development.json
+│   └── sqlite
+│       └── data.sqlite
+├── src
+│   ├── bootstrap
+│   │   ├── master.js
+│   │   └── worker.js
+│   ├── config
+│   │   ├── adapter.js
+│   │   ├── config.js
+│   │   ├── config.production.js
+│   │   ├── extend.js
+│   │   ├── middleware.js
+│   │   └── router.js
+│   ├── controller
+│   │   ├── base.js
+│   │   └── index.js
+│   ├── logic
+│   │   └── index.js
+│   └── model
+│       └── index.js
+├── view
+│   └── index_index.html
+└── www
+    └── static
+        ├── css
+        │   └── bootstrap-switch.min.css
+        ├── img
+        │   └── add.png
+        └── js
+            └── bootstrap-switch.min.js
+```
