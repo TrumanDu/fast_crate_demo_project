@@ -12,5 +12,4 @@ spring:
 # elasticsearch #
 #               #
 ################# 
-#elasticsearch.rest.urls: http://localhost:9200,http://localhost:9200
-elasticsearch.rest.urls: http://10.16.238.103:9210,http://10.16.238.104:9210  
+elasticsearch.rest.urls: http://localhost:9200,http://localhost:9200
