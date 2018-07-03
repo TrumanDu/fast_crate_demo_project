@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="layout">
+<meta charset="utf-8" />
+<title>首页</title>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<body>
+	<div layout:fragment="content">
+		<div th:insert="common/left :: left(tab='home')">left</div>
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<h1>中药</h1>
+				<ol class="breadcrumb">
+					<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+					<li class="active">Dashboard</li>
+				</ol>
+			</section>
+
+			<!-- Main content -->
+			<section class="content">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="box">
+							<div class="box-header"></div>
+							<!-- /.box-header -->
+							<div class="box-body">
+								<form class="form-inline search-form" th:action="@{/home}"
+									method="post">
+									<div class="row">
+										<div class="form-group col-xs-3">
+											<label class="control-label">科&#12288;&#12288;属：</label> <input
+												type="text" class="form-control" name="col1"
+												th:value="${queryParam?.col1}">
+										</div>
+										<div class="form-group col-xs-3">
+											<label class="control-label">中药名：&#12288;</label> <input
+												type="text" class="form-control" name="col3"
+												th:value="${queryParam?.col3}">
+										</div>
+										<div class="form-group col-xs-3">
+											<label class="control-label">归经：</label> <input type="text"
+												class="form-control" name="col5"
+												th:value="${queryParam?.col5}">
+										</div>
+
+										<div class="form-group col-xs-3">
+											<label class="control-label">主治：</label> <input type="text"
+												class="form-control" name="col7"
+												th:value="${queryParam?.col7}">
+										</div>
+									</div>
+
+									<div class="row row-margin-top">
+										<div class="form-group col-xs-3">
+											<label class="control-label">用药部位：</label> <input type="text"
+												class="form-control" name="col2"
+												th:value="${queryParam?.col2}">
+										</div>
+										<div class="form-group col-xs-3"></div>
+										<div class="form-group col-xs-3">
+											<label class="control-label"></label>
+											<button type="submit" class="btn btn-primary">
+												查询 <i class="fa fa-search"></i>
+											</button>
+											&nbsp;&nbsp;&nbsp;&nbsp;
+											<button type="button" class="btn btn-default"
+												onclick="formReset()">
+												重置 <i class="fa fa-repeat"></i>
+											</button>
+										</div>
+
+										<div class="form-group col-xs-3"></div>
+									</div>
+								</form>
+							</div>
+						</div>
+
+						<div class="box">
+							<div class="box-header"></div>
+							<!-- /.box-header -->
+							<div class="box-body">
+								<table id="example1" class="table table-bordered table-hover">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th width="50px">科属</th>
+											<th width="80px">用药部位</th>
+											<th width="80px">中药名</th>
+											<th width="80px">性味</th>
+											<th width="80px">归经</th>
+											<th>功效</th>
+											<th>主治</th>
+											<th width="80px">用法</th>
+											<th width="100px">用量</th>
+											<!-- <th>使用注意</th> -->
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="medicine,dataStat: ${page.data}">
+											<td th:text="${dataStat.count}">1</td>
+											<td th:text="${medicine.col1}">麻黄</td>
+											<td th:text="${medicine.col2}">草质茎</td>
+											<td th:text="${medicine.col3}">麻黄</td>
+											<td th:text="${medicine.col4}">辛苦微温</td>
+											<td th:text="${medicine.col5}">肺膀胱</td>
+											<td th:text="${medicine.col6}">发汗解表,宣肺平喘,利水消肿</td>
+											<td th:text="${medicine.col7}">风寒感冒、咳嗽气喘,风水水肿,风寒痹症,阴疽,痰核</td>
+											<td th:text="${medicine.col8}">煎服</td>
+											<td th:text="${medicine.col9}">3/10</td>
+											<!-- <td th:text="${medicine.col10}">表虚自汗、阴虚盗汗、虚喘均当慎用</td> -->
+										</tr>
+									</tbody>
+								</table>
+								<nav aria-label="..." style="text-align: right;">
+									<ul class="pagination">
+										<li th:if="${page.pageIndex == 0}" class="disabled"><a
+											href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+										<li th:unless="${page.pageIndex == 0}"><a href="#"
+											th:onclick="'javascript:page(\''+${page.pageIndex-1}+'\')'"
+											aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+
+										<li
+											th:each="i, stat:${#numbers.sequence(page.pageIndex+1, page.pageIndex+5)}"
+											th:class="${page.pageIndex+1 == i} ? active"
+											th:if="${i le page.pageCount}"><a href="#"
+											th:onclick="'javascript:page(\''+${i}+'\')'" th:text="${i}"><span
+												class="sr-only">(current)</span></a></li>
+
+										<li th:if="${page.pageIndex == page.pageCount-1}"
+											class="disabled"><a href="#" aria-label="Next"> <span
+												aria-hidden="true">&raquo;</span>
+										</a></li>
+										<li th:unless="${page.pageIndex == page.pageCount-1}"><a
+											href="#" aria-label="Next"
+											th:onclick="'javascript:page(\''+${page.pageIndex+1}+'\')'">
+												<span aria-hidden="true">&raquo;</span>
+										</a></li>
+									</ul>
+								</nav>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+			</section>
+			<!-- /.content -->
+		</div>
+	</div>
+</body>
+</html>
