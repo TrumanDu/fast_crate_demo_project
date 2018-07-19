@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-	layout:decorator="layout">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
+<head>
 <meta charset="utf-8" />
 <title>首页</title>
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>	
 <body>
 	<div layout:fragment="content">
 		<div th:insert="common/left :: left(tab='home')">left</div>
@@ -130,11 +132,13 @@
 											th:onclick="'javascript:page(\''+${i}+'\')'" th:text="${i}"><span
 												class="sr-only">(current)</span></a></li>
 
-										<li th:if="${page.pageIndex == page.pageCount-1}"
+										<li
+											th:if="${page.pageIndex == page.pageCount-1|| page.pageCount==0 || page.pageCount==1}"
 											class="disabled"><a href="#" aria-label="Next"> <span
 												aria-hidden="true">&raquo;</span>
 										</a></li>
-										<li th:unless="${page.pageIndex == page.pageCount-1}"><a
+										<li
+											th:unless="${page.pageIndex == page.pageCount-1|| page.pageCount==0 || page.pageCount==1}"><a
 											href="#" aria-label="Next"
 											th:onclick="'javascript:page(\''+${page.pageIndex+1}+'\')'">
 												<span aria-hidden="true">&raquo;</span>
@@ -143,7 +147,6 @@
 								</nav>
 							</div>
 						</div>
-
 					</div>
 				</div>
 
